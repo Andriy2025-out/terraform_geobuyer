@@ -147,7 +147,7 @@ variable "cluster_tags" {
 variable "app_database_name" {
   description = "Name of the application database"
   type        = string
-  default     = "geobuyer_dev"
+  default     = "geobuyer-pgsql-staging-pg"
 }
 
 variable "app_user_name" {

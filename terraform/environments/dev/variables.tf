@@ -147,7 +147,7 @@ variable "cluster_tags" {
 variable "app_database_name" {
   description = "Name of the application database"
   type        = string
-  default     = "geobuyer_dev"
+  default     = "geobuyer-dev-pg"
 }
 
 variable "app_user_name" {
@@ -159,5 +159,5 @@ variable "app_user_name" {
 variable "spaces_region" {
   description = "DigitalOcean Spaces region for Loki storage"
   type        = string
-  default     = "nyc3"
+  default     = "fra1"
 }
