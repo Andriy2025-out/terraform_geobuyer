@@ -20,7 +20,7 @@ module "vpc" {
 }
 
 module "kubernetes" {
-  do_token = var.do_token
+  do_token              = var.do_token
   source                = "../../modules/kubernetes"
   project_name          = var.project_name
   project_description   = "Development environment for GeoBuyer"
@@ -50,4 +50,32 @@ module "kubernetes" {
   node_pool_2_taint_value = var.node_pool_2_taint_value
   node_pool_2_taint_effect = var.node_pool_2_taint_effect
   cluster_tags          = var.cluster_tags
+}
+
+module "database" {
+  source = "../../modules/database"
+  
+  do_token          = var.do_token
+  database_name     = "${var.cluster_name}-db"
+  database_engine   = "postgresql"
+  database_version  = "15"
+  database_size     = "db-s-1vcpu-2gb"  # Basic - Shared CPU / 1 vCPU / 2 GB RAM
+  region            = var.region
+  node_count        = 1  # Primary only
+  app_database_name = var.app_database_name
+  app_user_name     = var.app_user_name
+  database_tags     = ["environment:dev", "managed-by:terraform"]
+}
+
+module "loki_storage" {
+  source = "../../modules/storage"
+  
+  do_token                          = var.do_token
+  bucket_name                       = "${var.cluster_name}-loki-logs"
+  spaces_region                     = var.spaces_region
+  versioning_enabled                = false
+  log_retention_days                = 30
+  noncurrent_version_expiration_days = 7
+  create_project                    = false
+  environment                       = "dev"
 }

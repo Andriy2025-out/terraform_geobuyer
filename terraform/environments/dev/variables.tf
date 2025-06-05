@@ -143,3 +143,21 @@ variable "cluster_tags" {
   description = "Tags for the cluster"
   type        = list(string)
 }
+
+variable "app_database_name" {
+  description = "Name of the application database"
+  type        = string
+  default     = "geobuyer_dev"
+}
+
+variable "app_user_name" {
+  description = "Name of the application database user"
+  type        = string
+  default     = "geobuyer_user"
+}
+
+variable "spaces_region" {
+  description = "DigitalOcean Spaces region for Loki storage"
+  type        = string
+  default     = "nyc3"
+}
