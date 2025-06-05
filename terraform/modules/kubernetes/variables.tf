@@ -1,3 +1,9 @@
+variable "do_token" {
+  description = "DigitalOcean API token"
+  type        = string
+  sensitive   = true
+}
+
 variable "project_name" {
   description = "Name of the DigitalOcean project"
   type        = string
@@ -28,7 +34,7 @@ variable "kubernetes_version" {
   default     = null
 
   validation {
-    condition = var.kubernetes_version == null || can(regex("^\\d+\\.\\d+\\.\\d+-do\\.\\d+$", var.kubernetes_version))
+    condition     = var.kubernetes_version == null || can(regex("^\\d+\\.\\d+\\.\\d+-do\\.\\d+$", var.kubernetes_version))
     error_message = "Kubernetes version must be in format 'x.y.z-do.n' or null for latest."
   }
 }

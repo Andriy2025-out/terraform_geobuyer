@@ -6,6 +6,14 @@ terraform {
   }
 }
 
+provider "digitalocean" {
+  token = var.do_token
+}
+
+data "digitalocean_kubernetes_versions" "latest" {
+  version_prefix = "1.32." # Optional: constrain to specific major.minor
+}
+
 resource "digitalocean_project" "project" {
   name        = var.project_name
   description = var.project_description
@@ -13,28 +21,17 @@ resource "digitalocean_project" "project" {
   purpose     = "Terraform-managed Kubernetes cluster"
 }
 
-
-variable "do_token" {
-  description = "DigitalOcean API token"
-  type        = string
-  sensitive   = true
-}
-
-data "digitalocean_kubernetes_versions" "latest" {
-  version_prefix = "1.32."  # Optional: constrain to specific major.minor
-}
-
 resource "digitalocean_kubernetes_cluster" "cluster" {
-  name                         = var.cluster_name
-  region                       = var.region
-  version                      = var.kubernetes_version != null ? var.kubernetes_version : data.digitalocean_kubernetes_versions.latest.latest_version
-  ha                           = var.ha
-  surge_upgrade                = var.surge_upgrade
-  vpc_uuid                     = var.vpc_id
-  tags                         = var.cluster_tags
-  registry_integration         = true
+  name                             = var.cluster_name
+  region                           = var.region
+  version                          = var.kubernetes_version != null ? var.kubernetes_version : data.digitalocean_kubernetes_versions.latest.latest_version
+  ha                               = var.ha
+  surge_upgrade                    = var.surge_upgrade
+  vpc_uuid                         = var.vpc_id
+  tags                             = var.cluster_tags
+  registry_integration             = true
   destroy_all_associated_resources = false
-  auto_upgrade                 = false
+  auto_upgrade                     = false
 
   maintenance_policy {
     day        = var.maintenance_day
@@ -79,6 +76,6 @@ resource "digitalocean_kubernetes_node_pool" "node_pool_2" {
 }
 
 resource "digitalocean_project_resources" "project_clusters" {
-  project = digitalocean_project.project.id
+  project   = digitalocean_project.project.id
   resources = [digitalocean_kubernetes_cluster.cluster.urn]
 }
